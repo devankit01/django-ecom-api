@@ -156,6 +156,36 @@ class RegisterView(generics.GenericAPIView):
             recipient_list,
             fail_silently=False,
         )
+
+        # SNS Integration
+        SENDER_ID = "senderid02"
+        SMS_MOBILE = "+919140562195"  # Make sure is set in E.164 format.
+        SMS_MESSAGE = message
+
+
+        # Create an SNS client
+        clientSNS = boto3.client(
+            "sns",
+            aws_access_key_id="AKIAXLSZRNQVNIHKAEFH",
+            aws_secret_access_key="TmVtunbwWlB+JuCFhLOAjgsjQuLaGnuy2x2clI7y",
+            region_name="us-east-1"
+        )
+                # Send your sms message.
+        response = clientSNS.publish(
+            PhoneNumber=SMS_MOBILE,
+            Message=SMS_MESSAGE,
+            MessageAttributes={
+                'string': {
+                    'DataType': 'String',
+                    'StringValue': 'String',
+                },
+                'AWS.SNS.SMS.SenderID': {
+                    'DataType': 'String',
+                    'StringValue': SENDER_ID
+                }
+            }
+        )
+
         user = UserSerializer(user)
 
         return Response({
@@ -338,8 +368,9 @@ def my_handler(sender, **kwargs):
 def createCart(sender, **kwargs):
     print('User Created')
     user = kwargs['instance']
+    print(user, type(user))
     try:
-        obj = Cart.objects.get(user=user, Isordered=False).reverse().first()
+        obj = Cart.objects.filter(user=user, Isordered=False).reverse().first()
         print('Got cart')
     except Exception as e:
         obj = Cart.objects.create(user=user)
