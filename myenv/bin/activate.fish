@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/ankit/Desktop/MyStuff/AWS and Django/DRF-Ecom/Ecom/myenv"
+set -gx VIRTUAL_ENV "/home/ankit/Desktop/MyStuff/Serverless/DRF-Ecom/Ecom/myenv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

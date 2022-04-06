@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/ankit/Desktop/MyStuff/AWS and Django/DRF-Ecom/Ecom/myenv"
+VIRTUAL_ENV="/home/ankit/Desktop/MyStuff/Serverless/DRF-Ecom/Ecom/myenv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

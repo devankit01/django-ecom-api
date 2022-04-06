@@ -1,4 +1,4 @@
-#!/home/ankit/Desktop/MyStuff/AWS and Django/DRF-Ecom/Ecom/myenv/bin/python3
+#!/home/ankit/Desktop/MyStuff/Serverless/DRF-Ecom/Ecom/myenv/bin/python3
 
 import sys
 import json

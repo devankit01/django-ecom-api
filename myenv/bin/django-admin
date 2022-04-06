@@ -1,6 +1,4 @@
-#!/bin/sh
-'''exec' "/home/ankit/Desktop/MyStuff/AWS and Django/DRF-Ecom/Ecom/myenv/bin/python3" "$0" "$@"
-' '''
+#!/home/ankit/Desktop/MyStuff/Serverless/DRF-Ecom/Ecom/myenv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
