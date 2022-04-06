@@ -140,8 +140,7 @@ class RegisterView(generics.GenericAPIView):
             return Response({'msg': 'Email already exists'}, status=400)
 
         user = User.objects.filter(email=request.data.get('email')).first()
-        refresh = RefreshToken.for_user(user)  # Get Token
-
+        print(user)
         range_start = 10**(6-1)
         range_end = (10**6)-1
         otp = random.randint(range_start, range_end)
@@ -207,12 +206,12 @@ class LoginAPI(APIView):
 
         Account = User.objects.get(username=request.data['username'])
         print(Account)
-        print( check_password(request.data['password'], Account.password))
+        print('----',  Account.is_active)
         if not check_password(request.data['password'], Account.password):
             return Response({
                 "message": "invalid credentials",
                 'status': 400})
-        else:
+        elif Account.is_active:
             user = UserSerializer(Account)
             refresh = RefreshToken.for_user(Account)  # Get Token
 
@@ -221,6 +220,11 @@ class LoginAPI(APIView):
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
                 'status': 201})
+
+        else:
+            return Response({
+                "message": "Please verify your account",
+                'status': 400})
 
             # No backend authenticated the credentials
 # Cart APIViews
