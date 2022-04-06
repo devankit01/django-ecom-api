@@ -20,7 +20,7 @@ urlpatterns = [
 
 
     path('register/', RegisterView.as_view()),
-    path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('login/', LoginAPI.as_view(), name='token_obtain_pair'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('verify-otp/', EmailOTPVerifyView.as_view(), name='verify_otp'),
 ]

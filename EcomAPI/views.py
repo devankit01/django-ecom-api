@@ -21,6 +21,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.backends import TokenBackend
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import permission_required
+from django.contrib.auth import authenticate
 # Category
 
 from django.utils import six
@@ -28,6 +29,7 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.core.mail import EmailMultiAlternatives
 
+from django.contrib.auth.hashers import check_password
 
 class CategoryList(APIView):
 
@@ -199,6 +201,28 @@ class EmailOTPVerifyView(APIView):
                 'status': 404})
 
 
+class LoginAPI(APIView):
+    def post(self, request):
+        print(request.data)
+
+        Account = User.objects.get(username=request.data['username'])
+        print(Account)
+        print( check_password(request.data['password'], Account.password))
+        if not check_password(request.data['password'], Account.password):
+            return Response({
+                "message": "invalid credentials",
+                'status': 400})
+        else:
+            user = UserSerializer(Account)
+            refresh = RefreshToken.for_user(Account)  # Get Token
+
+            return Response({
+                "user": user.data,
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'status': 201})
+
+            # No backend authenticated the credentials
 # Cart APIViews
 
 

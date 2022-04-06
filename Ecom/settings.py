@@ -31,6 +31,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'storages',
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
     'EcomAPI',
     'django_filters',
 
