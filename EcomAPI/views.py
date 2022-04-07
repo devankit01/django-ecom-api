@@ -31,6 +31,8 @@ from django.core.mail import EmailMultiAlternatives
 
 from django.contrib.auth.hashers import check_password
 
+from modules import awsSns
+
 class CategoryList(APIView):
 
     permission_classes = [IsAuthenticated]
@@ -140,58 +142,23 @@ class RegisterView(generics.GenericAPIView):
             return Response({'msg': 'Email already exists'}, status=400)
 
         user = User.objects.filter(email=request.data.get('email')).first()
-        print(user)
-        range_start = 10**(6-1)
-        range_end = (10**6)-1
-        otp = random.randint(range_start, range_end)
-        OTP.objects.create(user=user, otp=otp)
-        subject = 'Please Confirm Your Account'
-        message = 'Your 6 Digit Verification Pin: {}'.format(str(otp))
-
-        recipient_list = [request.data.get('email')]
-        print(otp, "Sended Mail")
-        send_mail(
-            subject, message,
-            'from@example.com',
-            recipient_list,
-            fail_silently=False,
-        )
-
-        # SNS Integration
-        SENDER_ID = "senderid02"
-        SMS_MOBILE = "+919140562195"  # Make sure is set in E.164 format.
-        SMS_MESSAGE = message
-
-
-        # Create an SNS client
-        clientSNS = boto3.client(
-            "sns",
-            aws_access_key_id="AKIAXLSZRNQVNIHKAEFH",
-            aws_secret_access_key="TmVtunbwWlB+JuCFhLOAjgsjQuLaGnuy2x2clI7y",
-            region_name="us-east-1"
-        )
-                # Send your sms message.
-        response = clientSNS.publish(
-            PhoneNumber=SMS_MOBILE,
-            Message=SMS_MESSAGE,
-            MessageAttributes={
-                'string': {
-                    'DataType': 'String',
-                    'StringValue': 'String',
-                },
-                'AWS.SNS.SMS.SenderID': {
-                    'DataType': 'String',
-                    'StringValue': SENDER_ID
-                }
-            }
-        )
-
+        # User.objects.create(email=request.data,use)
+        context = {
+            "SMS_TO"                : request.data['sms_to'],
+            "MESSAGE"               : request.data['message'],
+        }
+        result = awsSns.AWS_SNS.sendSms(context)
         user = UserSerializer(user)
+        if result['ResponseMetadata']['HTTPStatusCode'] == 200:
+            return Response({
+                "user": user.data,
+                'msg': 'Please verify your email address via OTP sent.',
+                'status': 201})
 
         return Response({
-            "user": user.data,
-            'msg': 'Please verify your email address via OTP sent.',
-            'status': 201})
+                "user": user.data,
+                'msg': 'OTP not sent.',
+                'status': 400})
 
 
 class EmailOTPVerifyView(APIView):
