@@ -167,3 +167,36 @@ AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
 REGION_NAME = config('REGION_NAME')
 # SNS SENDER ID
 SENDER_ID = config('SENDER_ID')
+
+
+
+# Logger Settings
+DEBUG_FILE = os.path.join(BASE_DIR,"Logs/app.log")
+
+LOGGING = { 
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format' : "%(asctime)s,%(levelname)s,%(module)s,%(message)s",
+            'datefmt' : "%d/%b/%Y %H:%M:%S"
+        },
+    },
+    'handlers': {
+        'per_day_file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': DEBUG_FILE,
+            'when': 'D', # this specifies the interval
+            'interval': 1, # defaults to 1, only necessary for other values 
+            'backupCount': 30, # how many backup file to keep, 30 days
+            'formatter': 'verbose',
+        }        
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['per_day_file'],
+            'level': config('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+    }
+}
