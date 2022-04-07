@@ -3,7 +3,7 @@ EcomAPI/__pycache__
 *.pyc
 .pyc
 myenv/
-myenv/python3.8/site-packages/
+myenv/lib/python3.8/site-packages/
 site-packages/
-
+.env
 node_modules/
