@@ -112,7 +112,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-DEBUG = False  # For PRODUCTION
+DEBUG = True  # For PRODUCTION
 
 
 STATIC_URL = '/static/'
@@ -146,11 +146,13 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
+
+# Fetching email credentials from .env file
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'no.reply.django3@gmail.com'
-EMAIL_HOST_PASSWORD = 'Ankit@98'
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 # in-v3.mailjet.com, 587, key : f64a2dfbd9e4eb6fcb59e8977356a715, pass : 3afb6e941bc1ae7fc5e905331221dd8c
 SIMPLE_JWT = {

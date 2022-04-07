@@ -47,6 +47,6 @@ class AWS_SNS:
                 }
             )
             print(response,'getting response-------------------')
-            return response
+            return response,OTP
         except Exception as error:
             return False,error

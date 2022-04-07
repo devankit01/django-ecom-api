@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <meta name="color-scheme" content=" dark light" />
+    <meta name="supported-color-schemes" content=" dark light" />
+    <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Spartan:wght@100;200;300;400;500;600;700;900&display=swap"
+        rel="stylesheet"> -->
+    <style type="text/css">
+      html {
+        font-family: Helvetica, sans-serif;
+      }
+
+      body {
+        background: #fff;
+        font-family: Helvetica, sans-serif;
+      }
+
+      .font_color {
+        font-size: 22px !important;
+      }
+
+      .code_color {
+        font-size: 25px !important;
+        background: #ffe5dd !important;
+      }
+
+
+      @media (prefers-color-scheme: dark) {
+        .theme {
+          background: #343434 !important;
+        }
+
+        .font_color {
+          color: #fff !important;
+        }
+
+        .code_color {
+          background: rgba(248, 115, 105, 1) !important;
+        }
+
+        .text_color {
+          color: #fff;
+        }
+
+        .logo {
+          filter: brightness(0) invert(1);
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        .theme {
+          background: #ffffff;
+        }
+
+        .font_color {
+          color: #1f292a !important;
+        }
+
+        .code_color {
+          background: #ffe5dd !important;
+        }
+
+        .text_color {
+          color: #1f292a;
+        }
+      }
+    </style>
+  </head>
+
+  <body style="width: 347px; margin: 0px auto">
+    <table class="theme" style="width: 100%; padding: 30px; text-align: center">
+      <tr>
+        <td>
+          <table style="width: 100%">
+            <tr>
+              <td style="height: 20px">
+                <img
+                  src="{{logo}}"
+                  class="logo"
+                  alt=""
+                  width="70px"   
+                  height="20px"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td style="height: 20px"></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <table style="width: 100%">
+            <tr>
+              <td style="height: 100px">
+                <img    
+                  src="https://dev-apis.clear.bio/static/vector.png"
+                  class="lock"
+                  alt=""
+                 width="70px"   
+                 height="70px"
+                
+                />
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <table style="width: 100%">
+            <tr>
+              <td style="font-size: 22px; font-weight: 700" class="font_color">
+                {{otp_text}}
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <table style="width: 100%">
+            <tr>
+              <td style="font-weight: 700">
+                <div
+                  class="code_color"
+                  style="
+                    width: 240px;
+                    line-height: 60px;
+                    text-align: center;
+                    border-radius: 17px;
+                    margin: 30px auto;
+                  "
+                >
+                  {{otp}}
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <table style="width: 100%">
+            <tr>
+              <td style="font-weight: 400">
+                <p
+                  style="
+                    margin: 0px;
+                    padding: 0px;
+                    font-size: 14px;
+                    line-height: 28px;
+                  "
+                  class="text_color"
+                >
+                  {{otp_body}}.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
