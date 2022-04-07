@@ -2,5 +2,5 @@ Ecom/__pycache__
 EcomAPI/__pycache__
 *.pyc
 .pyc
-./myenv/
+myenv/
 node_modules/
