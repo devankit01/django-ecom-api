@@ -4,3 +4,9 @@ EcomAPI/__pycache__
 .pyc
 myenv/
 node_modules/
+
+
+
+# Env File
+ *.env
+ .env

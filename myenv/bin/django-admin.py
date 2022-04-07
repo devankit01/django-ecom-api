@@ -1,4 +1,4 @@
-#!/home/ankit/Desktop/MyStuff/Serverless/DRF-Ecom/Ecom/myenv/bin/python3
+#!/home/appventurez/projects/appventurez_module/django-modules/myenv/bin/python
 from django.core import management
 
 if __name__ == "__main__":
