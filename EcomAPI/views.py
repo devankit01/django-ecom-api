@@ -32,7 +32,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.hashers import check_password
 from datetime import datetime, timedelta
 
-from modules import awsSns
+from modules import awsSns, otpMail
 
 class CategoryList(APIView):
 
@@ -139,14 +139,16 @@ class RegisterView(generics.GenericAPIView):
         if serializer.is_valid():
             serializer.save()
         user = User.objects.filter(email=request.data.get('email')).first()
-        # User.objects.create(email=request.data,use)
         context = {
             "SMS_TO"                : request.data['sms_to'],
             "MESSAGE"               : request.data['message'],
         }
         result = awsSns.AWS_SNS.sendSms(context)
+        OTP.objects.create(otp=result[1],user=user) #storing OTP in db
         user = UserSerializer(user)
-        if result['ResponseMetadata']['HTTPStatusCode'] == 200:
+        if result[0]['ResponseMetadata']['HTTPStatusCode'] == 200:
+            context = request.data
+            customMail = otpMail.OTP_MAIL.sendMailTemplate(context,result[1])
             return Response({
                 "user": user.data,
                 'msg': 'Please verify your email address via OTP sent.',
@@ -174,40 +176,35 @@ class EmailOTPVerifyView(APIView):
             return Response({'message': 'Already an active user', 'status':400}, status=400)
 
 
-        otp = OTP.objects.filter(user=user).reverse().first()
+        otp = OTP.objects.filter(user=user)#.reverse().first()
+        if otp.exists():
+            otp = otp.reverse().first()
+            # Check OTP Validation 
+            otp_time = datetime.strptime(str(otp.timestamp)[:19], "%Y-%m-%d %H:%M:%S")
+            current_time = datetime.strptime(str(datetime.now())[:19], "%Y-%m-%d %H:%M:%S")
+            diff = (current_time - otp_time).total_seconds() / 60
+            if diff > int(settings.OTP_TIME_OUT):
+                return Response({'message': 'OTP Expired', 'status':400}, status=400)
 
+            if str(otp.otp) == str(request.data.get('otp')):
+                user.is_active = True
+                user.save()
 
+                refresh = RefreshToken.for_user(user)  # Get Token
+                userObj = User.objects.filter(id=request.data.get('id')).first()
 
-        # Check OTP Validation 
-        otp_time = datetime.strptime(str(otp.timestamp)[:19], "%Y-%m-%d %H:%M:%S")
-        current_time = datetime.strptime(str(datetime.now())[:19], "%Y-%m-%d %H:%M:%S")
-        diff = (current_time - otp_time).total_seconds() / 60
-        if diff > 5:
-            return Response({'message': 'OTP Expired', 'status':400}, status=400)
-
-        if str(otp.otp) == str(request.data.get('otp')):
-            user.is_active = True
-            user.save()
-
-            refresh = RefreshToken.for_user(user)  # Get Token
-            userObj = User.objects.filter(id=request.data.get('id')).first()
-
-            user = UserSerializer(user)
-
-            message = render_to_string('email_template.html', {
-                'user': userObj,
-            })
-            to_email = userObj.email
-            # send_mail(mail_subject, message, 'youremail', [to_email])
-            msg = EmailMultiAlternatives(
-                'Welcome', message, 'youremail', [to_email])
-            msg.attach_alternative(message, "text/html")
-            msg.send()
-            return Response({
-                "user": user.data,
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-                'status': 201})
+                user = UserSerializer(user)
+                otp = request.data['otp']
+                customMail = otpMail.OTP_MAIL.sendMailTemplate(request.data,otp)
+                return Response({
+                    "user": user.data,
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                    'status': 201})
+            else:
+                return Response({
+                    'message': 'Invalid OTP',
+                    'status': 404})
         else:
             return Response({
                 'message': 'Invalid OTP',
