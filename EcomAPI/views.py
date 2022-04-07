@@ -30,7 +30,7 @@ from django.utils.encoding import force_bytes, force_text
 from django.core.mail import EmailMultiAlternatives
 
 from django.contrib.auth.hashers import check_password
-
+from datetime import datetime, timedelta
 class CategoryList(APIView):
 
     permission_classes = [IsAuthenticated]
@@ -133,14 +133,11 @@ class RegisterView(generics.GenericAPIView):
 
     def post(self, request, *args,  **kwargs):
         serializer = self.get_serializer(data=request.data)
-        try:
-            if serializer.is_valid():
-                serializer.save()
-        except Exception as e:
-            return Response({'msg': 'Email already exists'}, status=400)
-
+        if serializer.is_valid():
+            serializer.save()
         user = User.objects.filter(email=request.data.get('email')).first()
         print(user)
+        
         range_start = 10**(6-1)
         range_end = (10**6)-1
         otp = random.randint(range_start, range_end)
@@ -190,7 +187,7 @@ class RegisterView(generics.GenericAPIView):
 
         return Response({
             "user": user.data,
-            'msg': 'Please verify your email address via OTP sent.',
+            'message': 'Please verify your email address via OTP sent.',
             'status': 201})
 
 
@@ -198,13 +195,33 @@ class EmailOTPVerifyView(APIView):
     serializer_class = EmailOTPSerializer
 
     def post(self, request):
+
+        if not (request.data.get('id') and request.data.get('otp')):
+            return Response({'message': 'Fill all fields', 'status':400}, status=400)
+
         user = User.objects.filter(id=request.data.get('id')).first()
         if not user:
-            return Response({'message': 'No user'})
+            return Response({'message': 'No user', 'status':400}, status=400)
+        
+        if user.is_active:
+            return Response({'message': 'Already an active user', 'status':400}, status=400)
+
+
         otp = OTP.objects.filter(user=user).reverse().first()
+
+
+
+        # Check OTP Validation 
+        otp_time = datetime.strptime(str(otp.timestamp)[:19], "%Y-%m-%d %H:%M:%S")
+        current_time = datetime.strptime(str(datetime.now())[:19], "%Y-%m-%d %H:%M:%S")
+        diff = (current_time - otp_time).total_seconds() / 60
+        if diff > 5:
+            return Response({'message': 'OTP Expired', 'status':400}, status=400)
+
         if str(otp.otp) == str(request.data.get('otp')):
             user.is_active = True
             user.save()
+
             refresh = RefreshToken.for_user(user)  # Get Token
             userObj = User.objects.filter(id=request.data.get('id')).first()
 
@@ -235,8 +252,7 @@ class LoginAPI(APIView):
         print(request.data)
 
         Account = User.objects.get(username=request.data['username'])
-        print(Account)
-        print('----',  Account.is_active)
+
         if not check_password(request.data['password'], Account.password):
             return Response({
                 "message": "invalid credentials",
@@ -274,7 +290,7 @@ class CartView(APIView):
             cartObj = self.serializer_class(cartObj)
             return Response(cartObj.data)
         else:
-            return Response("Null", status=404)
+            return Response([], status=404)
 
 
 # Cart Items
@@ -307,6 +323,7 @@ class CartItemListView(APIView):
     def post(self, request):
         cartObj = Cart.objects.filter(
             user=request.user.id, Isordered=False).first()
+        print(cartObj)
         productObj = Product.objects.filter(id=request.data['product']).first()
         cartItemObj = CartItem(user=request.user, cart=cartObj, price=productObj.price,
                                quantity=request.data['quantity'], product=productObj)
@@ -369,10 +386,10 @@ def createCart(sender, **kwargs):
     print('User Created')
     user = kwargs['instance']
     print(user, type(user))
-    try:
-        obj = Cart.objects.get(user=user, Isordered=False).reverse().first()
-        print('Got cart')
-    except Exception as e:
+
+    obj = Cart.objects.filter(user=user, Isordered=False).reverse()
+    print('Got cart')
+    if len(obj) == 0:
         obj = Cart.objects.create(user=user)
         print('Created Cart')
 
