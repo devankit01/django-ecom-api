@@ -8,5 +8,5 @@ node_modules/
 
 
 # Env File
- *.env
- .env
+*.env
+.env
