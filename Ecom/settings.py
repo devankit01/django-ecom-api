@@ -1,6 +1,6 @@
 from datetime import timedelta
 import os
-
+from decouple import config
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -112,7 +112,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-DEBUG = False
+DEBUG = False  # For PRODUCTION
 
 
 STATIC_URL = '/static/'
@@ -160,3 +160,10 @@ SIMPLE_JWT = {
     'SIGNING_KEY': SECRET_KEY,
 
 }
+
+# Variable from env for AWS Configuration
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+REGION_NAME = config('REGION_NAME')
+# SNS SENDER ID
+SENDER_ID = config('SENDER_ID')
