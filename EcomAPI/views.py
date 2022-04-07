@@ -136,15 +136,24 @@ class RegisterView(generics.GenericAPIView):
 
     def post(self, request, *args,  **kwargs):
         serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
+        try:
+            if serializer.is_valid():
+                serializer.save()
+        except Exception as error:
+            return Response({'message' : 'Email Already Registered', 'status':400})
+
         user = User.objects.filter(email=request.data.get('email')).first()
-        # User.objects.create(email=request.data,use)
+
         context = {
-            "SMS_TO"                : request.data['sms_to'],
-            "MESSAGE"               : request.data['message'],
+            "SMS_TO"  : request.data['sms_to'],
+            "MESSAGE" : request.data['message'],
         }
+
+        # SNS Method
         result = awsSns.AWS_SNS.sendSms(context)
+
+        # MAIL Method
+
         user = UserSerializer(user)
         if result['ResponseMetadata']['HTTPStatusCode'] == 200:
             return Response({
