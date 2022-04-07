@@ -147,8 +147,13 @@ class RegisterView(generics.GenericAPIView):
         OTP.objects.create(otp=result[1],user=user) #storing OTP in db
         user = UserSerializer(user)
         if result[0]['ResponseMetadata']['HTTPStatusCode'] == 200:
-            context = request.data
-            customMail = otpMail.OTP_MAIL.sendMailTemplate(context,result[1])
+            # context = request.data
+            context['email'] = request.data['email']
+            context['otp'] = result[1]
+            context['subject'] = 'Register Mail.'
+            context['otp_body'] = 'Register email otp body will be here'
+            context['otp_text'] = 'Register email otp text will be here'
+            customMail = otpMail.OTP_MAIL.sendMailTemplate(context)
             return Response({
                 "user": user.data,
                 'msg': 'Please verify your email address via OTP sent.',
@@ -194,8 +199,14 @@ class EmailOTPVerifyView(APIView):
                 userObj = User.objects.filter(id=request.data.get('id')).first()
 
                 user = UserSerializer(user)
-                otp = request.data['otp']
-                customMail = otpMail.OTP_MAIL.sendMailTemplate(request.data,otp)
+                # otp = request.data['otp']
+                context = {}
+                context['otp'] = request.data['otp']
+                context['email'] = userObj
+                context['subject'] = 'Verify OTP Mail.'
+                context['otp_body'] = 'verify email otp body will be here'
+                context['otp_text'] = 'verify email otp text will be here'
+                customMail = otpMail.OTP_MAIL.sendMailTemplate(context)
                 return Response({
                     "user": user.data,
                     'refresh': str(refresh),
