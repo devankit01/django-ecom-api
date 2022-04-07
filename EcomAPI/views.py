@@ -370,7 +370,7 @@ def createCart(sender, **kwargs):
     user = kwargs['instance']
     print(user, type(user))
     try:
-        obj = Cart.objects.filter(user=user, Isordered=False).reverse().first()
+        obj = Cart.objects.get(user=user, Isordered=False).reverse().first()
         print('Got cart')
     except Exception as e:
         obj = Cart.objects.create(user=user)
