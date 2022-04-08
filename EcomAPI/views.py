@@ -88,8 +88,7 @@ class ProductList(generics.ListCreateAPIView):
     # filter_backends = [DjangoFilterBackend]
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'description']  # Search Filter DRF
-
-    def get(self, request):
+    def get(self, request):        
         return Response(self.serializer_class(Product.objects.all(), many=True).data)
 
     def post(self, request):
@@ -111,7 +110,7 @@ class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-
+    
     def patch(self, request, pk):
         if request.user.is_superuser:
             obj = Product(pk=pk)
@@ -421,3 +420,5 @@ class OrderView(APIView):
     #     cart = CartSerializer(cart)
     #     return Response(cart.data)
 # AKIAXLSZRNQVJTVCMCOX fnaciq71Dad6ThxxXrIYuXgXkBCoR3rPU8cHbMlz
+
+        

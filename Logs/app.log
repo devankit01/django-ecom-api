@@ -3,3 +3,4 @@
 07/Apr/2022 10:48:45,INFO,basehttp,"POST /api/category/ HTTP/1.1" 200 41
 07/Apr/2022 12:03:55,INFO,autoreload,Watching for file changes with StatReloader
 07/Apr/2022 12:04:11,INFO,autoreload,/home/appventurez/appventurez/django-modules/django-modules/Ecom/settings.py changed, reloading.
+08/Apr/2022 14:16:34,INFO,autoreload,Watching for file changes with StatReloader
