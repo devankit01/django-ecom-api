@@ -342,8 +342,6 @@ class CartItemDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 @receiver(pre_save, sender=CartItem)
 def my_handler(sender, **kwargs):
-    print('You Got Me ')
-
     # Get CardItem Model
     cartItemObj = kwargs['instance']
     priceofProduct = (Product.objects.get(id=cartItemObj.product.id)).price
@@ -421,3 +419,5 @@ class OrderView(APIView):
     #     cart = CartSerializer(cart)
     #     return Response(cart.data)
 # AKIAXLSZRNQVJTVCMCOX fnaciq71Dad6ThxxXrIYuXgXkBCoR3rPU8cHbMlz
+
+

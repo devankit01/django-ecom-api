@@ -76,7 +76,15 @@ DATABASES = {
         'PASSWORD': 'HOyW_TsmgdR-U9Nyx1v4BdUCxTteKu-n',
         'HOST': 'raja.db.elephantsql.com',
         'PORT': '5432',
-    }
+    },
+    'users_db':{
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'bozwqerj',
+        'USER': 'bozwqerj',
+        'PASSWORD': '0XBkEtqz7MvlIj6wBmwLd1nSNFjHGq8W',
+        'HOST': 'batyr.db.elephantsql.com',
+        'PORT': '5432',
+    },
 }
 
 
@@ -202,3 +210,6 @@ LOGGING = {
         },
     }
 }
+
+# Configuration of multiple database by router
+DATABASE_ROUTERS=['routers.db_routers.AuthRouter']

@@ -3,3 +3,18 @@
 07/Apr/2022 10:48:45,INFO,basehttp,"POST /api/category/ HTTP/1.1" 200 41
 07/Apr/2022 12:03:55,INFO,autoreload,Watching for file changes with StatReloader
 07/Apr/2022 12:04:11,INFO,autoreload,/home/appventurez/appventurez/django-modules/django-modules/Ecom/settings.py changed, reloading.
+08/Apr/2022 11:00:51,INFO,autoreload,Watching for file changes with StatReloader
+08/Apr/2022 11:01:30,INFO,autoreload,Watching for file changes with StatReloader
+08/Apr/2022 11:05:29,INFO,autoreload,Watching for file changes with StatReloader
+08/Apr/2022 11:05:50,INFO,basehttp,"GET / HTTP/1.1" 200 903
+08/Apr/2022 11:05:51,INFO,basehttp,"GET /openapi HTTP/1.1" 200 3138
+08/Apr/2022 11:05:51,WARNING,log,Not Found: /favicon.ico
+08/Apr/2022 11:05:51,WARNING,basehttp,"GET /favicon.ico HTTP/1.1" 404 2321
+08/Apr/2022 11:22:51,INFO,autoreload,Watching for file changes with StatReloader
+08/Apr/2022 11:26:02,INFO,autoreload,Watching for file changes with StatReloader
+08/Apr/2022 11:35:41,INFO,autoreload,Watching for file changes with StatReloader
+08/Apr/2022 11:36:04,INFO,autoreload,Watching for file changes with StatReloader
+08/Apr/2022 11:36:24,INFO,basehttp,"GET / HTTP/1.1" 200 903
+08/Apr/2022 11:36:24,INFO,basehttp,"GET /openapi HTTP/1.1" 200 3138
+08/Apr/2022 11:36:24,WARNING,log,Not Found: /favicon.ico
+08/Apr/2022 11:36:24,WARNING,basehttp,"GET /favicon.ico HTTP/1.1" 404 2323
