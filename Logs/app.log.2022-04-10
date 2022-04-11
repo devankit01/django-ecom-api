@@ -1,0 +1,14 @@
+07/Apr/2022 10:48:10,INFO,autoreload,Watching for file changes with StatReloader
+07/Apr/2022 10:48:45,ERROR,views,Not authorized 401
+07/Apr/2022 10:48:45,INFO,basehttp,"POST /api/category/ HTTP/1.1" 200 41
+07/Apr/2022 12:03:55,INFO,autoreload,Watching for file changes with StatReloader
+07/Apr/2022 12:04:11,INFO,autoreload,/home/appventurez/appventurez/django-modules/django-modules/Ecom/settings.py changed, reloading.
+08/Apr/2022 04:49:36,INFO,autoreload,Watching for file changes with StatReloader
+08/Apr/2022 04:52:21,INFO,autoreload,Watching for file changes with StatReloader
+08/Apr/2022 04:58:01,INFO,autoreload,Watching for file changes with StatReloader
+08/Apr/2022 04:59:04,INFO,autoreload,Watching for file changes with StatReloader
+08/Apr/2022 04:59:44,INFO,autoreload,Watching for file changes with StatReloader
+08/Apr/2022 05:00:41,INFO,autoreload,Watching for file changes with StatReloader
+08/Apr/2022 05:24:54,INFO,autoreload,Watching for file changes with StatReloader
+08/Apr/2022 10:47:12,INFO,autoreload,Watching for file changes with StatReloader
+08/Apr/2022 10:52:02,INFO,autoreload,Watching for file changes with StatReloader
