@@ -46,7 +46,6 @@ class ProductSerializer(serializers.ModelSerializer):
             return result
 
 
-
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category

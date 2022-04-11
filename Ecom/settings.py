@@ -76,7 +76,15 @@ DATABASES = {
         'PASSWORD': 'HOyW_TsmgdR-U9Nyx1v4BdUCxTteKu-n',
         'HOST': 'raja.db.elephantsql.com',
         'PORT': '5432',
-    }
+    },
+    'users_db':{
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'bozwqerj',
+        'USER': 'bozwqerj',
+        'PASSWORD': '0XBkEtqz7MvlIj6wBmwLd1nSNFjHGq8W',
+        'HOST': 'batyr.db.elephantsql.com',
+        'PORT': '5432',
+    },
 }
 
 
@@ -112,7 +120,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-DEBUG = True  # For PRODUCTION
+DEBUG = False  # False For PRODUCTION
 
 
 STATIC_URL = '/static/'
@@ -174,6 +182,39 @@ SENDER_ID = config('SENDER_ID')
 OTP_TIME_OUT = config('OTP_TIME_OUT')
 
 
+
+
+# Logger Settings
+DEBUG_FILE = os.path.join(BASE_DIR,"Logs/app.log")
+
+LOGGING = { 
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format' : "%(asctime)s,%(levelname)s,%(module)s,%(message)s",
+            'datefmt' : "%d/%b/%Y %H:%M:%S"
+        },
+    },
+    'handlers': {
+        'per_day_file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': DEBUG_FILE,
+            'when': 'D', # this specifies the interval
+            'interval': 1, # defaults to 1, only necessary for other values 
+            'backupCount': 30, # how many backup file to keep, 30 days
+            'formatter': 'verbose',
+        }        
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['per_day_file'],
+            'level': config('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+    }
+}
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -187,3 +228,5 @@ CACHES = {
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 CACHE_TTL = 60 * 1  # 60 minutes
+# Configuration of multiple database by router
+DATABASE_ROUTERS=['routers.db_routers.AuthRouter']

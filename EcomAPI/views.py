@@ -88,8 +88,7 @@ class ProductList(generics.ListCreateAPIView):
     # filter_backends = [DjangoFilterBackend]
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'description']  # Search Filter DRF
-
-    def get(self, request):
+    def get(self, request):        
         return Response(self.serializer_class(Product.objects.all(), many=True).data)
 
     def post(self, request):
@@ -111,7 +110,7 @@ class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-
+    
     def patch(self, request, pk):
         if request.user.is_superuser:
             obj = Product(pk=pk)
@@ -136,13 +135,19 @@ class RegisterView(generics.GenericAPIView):
 
     def post(self, request, *args,  **kwargs):
         serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
+        try:
+            if serializer.is_valid():
+                serializer.save()
+        except Exception as error:
+            return Response({'message' : 'Email Already Registered', 'status':400})
+
         user = User.objects.filter(email=request.data.get('email')).first()
         context = {
-            "SMS_TO"                : request.data['sms_to'],
-            "MESSAGE"               : request.data['message'],
+            "SMS_TO"  : request.data['sms_to'],
+            "MESSAGE" : request.data['message'],
         }
+
+        # SNS Method
         result = awsSns.AWS_SNS.sendSms(context)
         OTP.objects.create(otp=result[1],user=user) #storing OTP in db
         user = UserSerializer(user)
@@ -336,8 +341,6 @@ class CartItemDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 @receiver(pre_save, sender=CartItem)
 def my_handler(sender, **kwargs):
-    print('You Got Me ')
-
     # Get CardItem Model
     cartItemObj = kwargs['instance']
     priceofProduct = (Product.objects.get(id=cartItemObj.product.id)).price
@@ -401,17 +404,4 @@ class OrderView(APIView):
         print('Cart Created')
         return Response(orderObj.data)
 
-    # def get(self, request, *args, **kwargs):
-    #     print()
-
-    #     # Decode Token
-    #     token = request.META.get('HTTP_AUTHORIZATION')
-    #     valid_data = TokenBackend(algorithm='HS256').decode(token,verify=False)
-    #     print(valid_data)
-    #     user = valid_data['user_id']
-    #     user = User.objects.filter(id=user).first()
-    #     print("User",user)
-    #     cart = Cart.objects.filter(user=user).first()
-    #     cart = CartSerializer(cart)
-    #     return Response(cart.data)
-# AKIAXLSZRNQVJTVCMCOX fnaciq71Dad6ThxxXrIYuXgXkBCoR3rPU8cHbMlz
+    
