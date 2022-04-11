@@ -26,7 +26,7 @@ class ProductSerializer(serializers.ModelSerializer):
         url = str("https://" + str(settings.AWS_STORAGE_BUCKET_NAME) + ".s3." +
                   str(settings.AWS_S3_REGION_NAME) + ".amazonaws.com/" + str(instance.image))
 
-        print(url)
+        print(url,'-------------------',instance.image)
         self.file = url
         if "product_"+str(instance.id) in cache:
             name = cache.get("product_"+str(instance.id)) #retrieving data from cache
