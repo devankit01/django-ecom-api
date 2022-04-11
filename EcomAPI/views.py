@@ -341,8 +341,6 @@ class CartItemDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 @receiver(pre_save, sender=CartItem)
 def my_handler(sender, **kwargs):
-    print('You Got Me ')
-
     # Get CardItem Model
     cartItemObj = kwargs['instance']
     priceofProduct = (Product.objects.get(id=cartItemObj.product.id)).price
@@ -406,19 +404,4 @@ class OrderView(APIView):
         print('Cart Created')
         return Response(orderObj.data)
 
-    # def get(self, request, *args, **kwargs):
-    #     print()
-
-    #     # Decode Token
-    #     token = request.META.get('HTTP_AUTHORIZATION')
-    #     valid_data = TokenBackend(algorithm='HS256').decode(token,verify=False)
-    #     print(valid_data)
-    #     user = valid_data['user_id']
-    #     user = User.objects.filter(id=user).first()
-    #     print("User",user)
-    #     cart = Cart.objects.filter(user=user).first()
-    #     cart = CartSerializer(cart)
-    #     return Response(cart.data)
-# AKIAXLSZRNQVJTVCMCOX fnaciq71Dad6ThxxXrIYuXgXkBCoR3rPU8cHbMlz
-
-        
+    
