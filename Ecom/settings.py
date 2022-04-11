@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'EcomAPI',
     'django_filters',
+    'django_crontab',
 
 ]
 MIDDLEWARE = [
@@ -120,7 +121,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-DEBUG = False  # False For PRODUCTION
+DEBUG = True  # False For PRODUCTION
 
 
 STATIC_URL = '/static/'
@@ -162,7 +163,6 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
-# in-v3.mailjet.com, 587, key : f64a2dfbd9e4eb6fcb59e8977356a715, pass : 3afb6e941bc1ae7fc5e905331221dd8c
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
@@ -175,6 +175,7 @@ SIMPLE_JWT = {
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
 REGION_NAME = config('REGION_NAME')
+BUCKET_NAME = config('BUCKET_NAME')
 # SNS SENDER ID
 SENDER_ID = config('SENDER_ID')
 
@@ -226,3 +227,8 @@ SESSION_CACHE_ALIAS = "default"
 CACHE_TTL = 60 * 1  # 60 minutes
 # Configuration of multiple database by router
 DATABASE_ROUTERS=['routers.db_routers.AuthRouter']
+
+
+CRONJOBS = [
+    ('00 05 * * *', 'Logs.uploadLogs.logUpload'),  # for running cron everyday
+]

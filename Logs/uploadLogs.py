@@ -3,25 +3,23 @@ import boto3
 from django.conf import settings
 from datetime import datetime, timedelta
 from os import listdir
-directory_path = os.getcwd()
-folder = directory_path + '/Logs/'
-print(folder)
-lastDay = datetime.today() - timedelta(days=1)
-files_path = [folder+x for x in listdir(folder) if x.endswith(str(lastDay)[:10]) ]
-print(files_path)
+def logUpload():
+    directory_path = os.getcwd()
+    folder_name = '/Logs/'
+    folder_dir_path = directory_path + folder_name
+    lastDay = datetime.today() - timedelta(days=1)
+    files_path = [folder_dir_path+x for x in listdir(folder_dir_path) if x.endswith(str(lastDay)[:10]) ]
 
+    #Creating Session With Boto3.
 
+    session = boto3.Session(
+    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+    )
 
-
-#Creating Session With Boto3.
-
-s3_client = boto3.client(service_name='s3', region_name='us-east-1',
-                         aws_access_key_id='AKIAXLSZRNQVNIHKAEFH',
-                         aws_secret_access_key='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')
-#Creating S3 Resource From the Session.
-# s3 = s3_client.resource('s3')
-print(type(files_path))
-for i in files_path:
-    print(i, type(i))
-    response = s3_client.upload_file(i, 'serverless-django3', 'AKIAXLSZRNQVNIHKAEFH')
-    print(response)
+    #Creating S3 Resource From the Session.
+    for i in files_path:
+        s3 = session.resource('s3')
+        file_name = i.split(folder_name)[1]
+        object = s3.Object(settings.BUCKET_NAME, "Logs/"+file_name)
+        result = object.put(Body=open(i, 'rb'))

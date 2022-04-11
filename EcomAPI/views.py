@@ -33,6 +33,9 @@ from django.contrib.auth.hashers import check_password
 from datetime import datetime, timedelta
 
 from modules import awsSns, otpMail
+import logging
+
+logger = logging.getLogger('django')
 
 class CategoryList(APIView):
 

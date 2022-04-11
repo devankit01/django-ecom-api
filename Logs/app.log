@@ -4,3 +4,84 @@
 07/Apr/2022 12:03:55,INFO,autoreload,Watching for file changes with StatReloader
 07/Apr/2022 12:04:11,INFO,autoreload,/home/appventurez/appventurez/django-modules/django-modules/Ecom/settings.py changed, reloading.
 08/Apr/2022 14:16:34,INFO,autoreload,Watching for file changes with StatReloader
+11/Apr/2022 06:17:41,INFO,autoreload,Watching for file changes with StatReloader
+11/Apr/2022 07:21:53,INFO,autoreload,/home/appventurez/appventurez/django-modules/django-modules/Ecom/settings.py changed, reloading.
+11/Apr/2022 07:21:54,INFO,autoreload,Watching for file changes with StatReloader
+11/Apr/2022 07:22:45,INFO,autoreload,/home/appventurez/appventurez/django-modules/django-modules/Ecom/settings.py changed, reloading.
+11/Apr/2022 07:22:46,INFO,autoreload,Watching for file changes with StatReloader
+11/Apr/2022 07:23:53,INFO,autoreload,Watching for file changes with StatReloader
+11/Apr/2022 07:25:32,INFO,autoreload,/home/appventurez/appventurez/django-modules/django-modules/Ecom/settings.py changed, reloading.
+11/Apr/2022 07:25:33,INFO,autoreload,Watching for file changes with StatReloader
+11/Apr/2022 07:31:07,INFO,autoreload,/home/appventurez/appventurez/django-modules/django-modules/Ecom/settings.py changed, reloading.
+11/Apr/2022 07:31:08,INFO,autoreload,Watching for file changes with StatReloader
+11/Apr/2022 07:33:50,INFO,autoreload,/home/appventurez/appventurez/django-modules/django-modules/EcomAPI/views.py changed, reloading.
+11/Apr/2022 07:33:51,INFO,autoreload,Watching for file changes with StatReloader
+11/Apr/2022 07:34:55,INFO,autoreload,/home/appventurez/appventurez/django-modules/django-modules/EcomAPI/serializers.py changed, reloading.
+11/Apr/2022 07:34:55,INFO,autoreload,Watching for file changes with StatReloader
+11/Apr/2022 07:35:21,ERROR,log,Internal Server Error: /api/login/
+Traceback (most recent call last):
+  File "/home/appventurez/.local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 34, in inner
+    response = get_response(request)
+  File "/home/appventurez/.local/lib/python3.8/site-packages/django/core/handlers/base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/appventurez/.local/lib/python3.8/site-packages/django/core/handlers/base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/appventurez/.local/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "/home/appventurez/.local/lib/python3.8/site-packages/django/views/generic/base.py", line 71, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/appventurez/.local/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/appventurez/.local/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/appventurez/.local/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/appventurez/.local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/appventurez/appventurez/django-modules/django-modules/EcomAPI/views.py", line 237, in post
+    Account = User.objects.get(username=request.data['username'])
+  File "/home/appventurez/.local/lib/python3.8/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/appventurez/.local/lib/python3.8/site-packages/django/db/models/query.py", line 415, in get
+    raise self.model.DoesNotExist(
+django.contrib.auth.models.User.DoesNotExist: User matching query does not exist.
+11/Apr/2022 07:35:21,ERROR,basehttp,"POST /api/login/ HTTP/1.1" 500 145
+11/Apr/2022 07:35:37,INFO,autoreload,/home/appventurez/appventurez/django-modules/django-modules/Ecom/settings.py changed, reloading.
+11/Apr/2022 07:35:37,INFO,autoreload,Watching for file changes with StatReloader
+11/Apr/2022 07:38:08,ERROR,log,Internal Server Error: /api/login/
+Traceback (most recent call last):
+  File "/home/appventurez/.local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 34, in inner
+    response = get_response(request)
+  File "/home/appventurez/.local/lib/python3.8/site-packages/django/core/handlers/base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/appventurez/.local/lib/python3.8/site-packages/django/core/handlers/base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/appventurez/.local/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "/home/appventurez/.local/lib/python3.8/site-packages/django/views/generic/base.py", line 71, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/appventurez/.local/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/appventurez/.local/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/appventurez/.local/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/appventurez/.local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/appventurez/appventurez/django-modules/django-modules/EcomAPI/views.py", line 237, in post
+    Account = User.objects.get(username=request.data['username'])
+  File "/home/appventurez/.local/lib/python3.8/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/appventurez/.local/lib/python3.8/site-packages/django/db/models/query.py", line 415, in get
+    raise self.model.DoesNotExist(
+django.contrib.auth.models.User.DoesNotExist: User matching query does not exist.
+11/Apr/2022 07:38:08,ERROR,basehttp,"POST /api/login/ HTTP/1.1" 500 19542
+11/Apr/2022 07:38:35,INFO,autoreload,/home/appventurez/appventurez/django-modules/django-modules/routers/db_routers.py changed, reloading.
+11/Apr/2022 07:38:36,INFO,autoreload,Watching for file changes with StatReloader
+11/Apr/2022 07:41:40,INFO,basehttp,"POST /api/login/ HTTP/1.1" 200 646
+11/Apr/2022 07:42:12,INFO,basehttp,"GET /api/products/50/ HTTP/1.1" 200 170
+11/Apr/2022 07:42:30,INFO,autoreload,/home/appventurez/appventurez/django-modules/django-modules/Ecom/settings.py changed, reloading.
+11/Apr/2022 07:42:30,INFO,autoreload,Watching for file changes with StatReloader
+11/Apr/2022 07:42:57,INFO,basehttp,"GET /api/products/50/ HTTP/1.1" 200 170
+11/Apr/2022 07:43:02,INFO,autoreload,/home/appventurez/appventurez/django-modules/django-modules/Ecom/settings.py changed, reloading.
+11/Apr/2022 07:43:03,INFO,autoreload,Watching for file changes with StatReloader
