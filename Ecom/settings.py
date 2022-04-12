@@ -136,12 +136,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # AWS_SECRET_ACCESS_KEY = 'WHLOwLUSmClHLowK5azzyXORwZMDhweXpbEEc0OX'
 # AWS_STORAGE_BUCKET_NAME = 'serverless-django3'
 # AWS_DEFAULT_ACL = None
-
-
-AWS_ACCESS_KEY = os.getenv('AWS_ACCESS_KEY')
-AWS_SECRET_KEY = os.getenv('AWS_SECRET_KEY')
+AWS_ACCESS_KEY = 'AKIAXLSZRNQVD4KPYHPP'
+AWS_SECRET_KEY = '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'
+REGION_NAME = "us-east-1"
+# AWS_ACCESS_KEY = os.getenv('AWS_ACCESS_KEY')
+# AWS_SECRET_KEY = os.getenv('AWS_SECRET_KEY')
 AWS_SQS_QUEUE_NAME = os.getenv('AWS_SQS_QUEUE_NAME')
-REGION_NAME = os.getenv('REGION_NAME')
+# REGION_NAME = os.getenv('REGION_NAME')
+UserPoolId = os.getenv('UserPoolId')
+clientId = os.getenv('clientId')
+
 
 
 
