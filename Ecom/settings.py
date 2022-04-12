@@ -114,7 +114,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-DEBUG = False
+DEBUG = True
 
 
 STATIC_URL = '/static/'
@@ -129,13 +129,21 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
-AWS_S3_ENDPOINT_URL = 'https://s3.amazonaws.com'
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-AWS_S3_REGION_NAME = 'ap-south-1'
-AWS_ACCESS_KEY_ID = 'AKIAXLSZRNQVOCBWCHDU'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'serverless-django3'
-AWS_DEFAULT_ACL = None
+# AWS_S3_ENDPOINT_URL = 'https://s3.amazonaws.com'
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# AWS_S3_REGION_NAME = 'ap-south-1'
+# AWS_ACCESS_KEY_ID = 'AKIAXLSZRNQVOCBWCHDU'
+# AWS_SECRET_ACCESS_KEY = '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'
+# AWS_STORAGE_BUCKET_NAME = 'serverless-django3'
+# AWS_DEFAULT_ACL = None
+
+
+AWS_ACCESS_KEY = os.getenv('AWS_ACCESS_KEY')
+AWS_SECRET_KEY = os.getenv('AWS_SECRET_KEY')
+AWS_SQS_QUEUE_NAME = os.getenv('AWS_SQS_QUEUE_NAME')
+REGION_NAME = os.getenv('REGION_NAME')
+
+
 
 
 # JWT Include

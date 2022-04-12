@@ -1,4 +1,5 @@
 import random
+from django.shortcuts import render,HttpResponse
 import uuid
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_save
@@ -423,3 +424,10 @@ class OrderView(APIView):
     #     cart = CartSerializer(cart)
     #     return Response(cart.data)
 # AKIAXLSZRNQVJTVCMCOX fnaciq71Dad6ThxxXrIYuXgXkBCoR3rPU8cHbMlz
+
+
+
+def check_Sqs(request):
+
+    print(request,"<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    return HttpResponse("success")
