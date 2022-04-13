@@ -1,6 +1,10 @@
+
+
 Ecom/__pycache__
 EcomAPI/__pycache__
-*.pyc
-.pyc
+
+EcomAPI/migrations/__pycache__
 myenv/
+modules/__pycache__
 node_modules/
+.vscode/

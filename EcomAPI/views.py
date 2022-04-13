@@ -30,6 +30,12 @@ from django.utils.encoding import force_bytes, force_text
 from django.core.mail import EmailMultiAlternatives
 
 from django.contrib.auth.hashers import check_password
+from datetime import datetime, timedelta
+
+from modules import awsSns, otpMail
+import logging
+
+logger = logging.getLogger('django')
 
 class CategoryList(APIView):
 
@@ -85,8 +91,7 @@ class ProductList(generics.ListCreateAPIView):
     # filter_backends = [DjangoFilterBackend]
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'description']  # Search Filter DRF
-
-    def get(self, request):
+    def get(self, request):        
         return Response(self.serializer_class(Product.objects.all(), many=True).data)
 
     def post(self, request):
@@ -108,7 +113,7 @@ class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-
+    
     def patch(self, request, pk):
         if request.user.is_superuser:
             obj = Product(pk=pk)
@@ -136,94 +141,89 @@ class RegisterView(generics.GenericAPIView):
         try:
             if serializer.is_valid():
                 serializer.save()
-        except Exception as e:
-            return Response({'msg': 'Email already exists'}, status=400)
+        except Exception as error:
+            return Response({'message' : 'Email Already Registered', 'status':400})
 
         user = User.objects.filter(email=request.data.get('email')).first()
-        print(user)
-        range_start = 10**(6-1)
-        range_end = (10**6)-1
-        otp = random.randint(range_start, range_end)
-        OTP.objects.create(user=user, otp=otp)
-        subject = 'Please Confirm Your Account'
-        message = 'Your 6 Digit Verification Pin: {}'.format(str(otp))
+        context = {
+            "SMS_TO"  : request.data['sms_to'],
+            "MESSAGE" : request.data['message'],
+        }
 
-        recipient_list = [request.data.get('email')]
-        print(otp, "Sended Mail")
-        send_mail(
-            subject, message,
-            'from@example.com',
-            recipient_list,
-            fail_silently=False,
-        )
-
-        # SNS Integration
-        SENDER_ID = "senderid02"
-        SMS_MOBILE = "+919140562195"  # Make sure is set in E.164 format.
-        SMS_MESSAGE = message
-
-
-        # Create an SNS client
-        clientSNS = boto3.client(
-            "sns",
-            aws_access_key_id="AKIAXLSZRNQVNIHKAEFH",
-            aws_secret_access_key="TmVtunbwWlB+JuCFhLOAjgsjQuLaGnuy2x2clI7y",
-            region_name="us-east-1"
-        )
-                # Send your sms message.
-        response = clientSNS.publish(
-            PhoneNumber=SMS_MOBILE,
-            Message=SMS_MESSAGE,
-            MessageAttributes={
-                'string': {
-                    'DataType': 'String',
-                    'StringValue': 'String',
-                },
-                'AWS.SNS.SMS.SenderID': {
-                    'DataType': 'String',
-                    'StringValue': SENDER_ID
-                }
-            }
-        )
-
+        # SNS Method
+        result = awsSns.AWS_SNS.sendSms(context)
+        OTP.objects.create(otp=result[1],user=user) #storing OTP in db
         user = UserSerializer(user)
+        if result[0]['ResponseMetadata']['HTTPStatusCode'] == 200:
+            # context = request.data
+            context['email'] = request.data['email']
+            context['otp'] = result[1]
+            context['subject'] = 'Register Mail.'
+            context['otp_body'] = 'Register email otp body will be here'
+            context['otp_text'] = 'Register email otp text will be here'
+            customMail = otpMail.OTP_MAIL.sendMailTemplate(context)
+            return Response({
+                "user": user.data,
+                'msg': 'Please verify your email address via OTP sent.',
+                'status': 201})
 
         return Response({
-            "user": user.data,
-            'msg': 'Please verify your email address via OTP sent.',
-            'status': 201})
+                "user": user.data,
+                'msg': 'OTP not sent.',
+                'status': 400})
 
 
 class EmailOTPVerifyView(APIView):
     serializer_class = EmailOTPSerializer
 
     def post(self, request):
+
+        if not (request.data.get('id') and request.data.get('otp')):
+            return Response({'message': 'Fill all fields', 'status':400}, status=400)
+
         user = User.objects.filter(id=request.data.get('id')).first()
         if not user:
-            return Response({'message': 'No user'})
-        otp = OTP.objects.filter(user=user).reverse().first()
-        if str(otp.otp) == str(request.data.get('otp')):
-            user.is_active = True
-            user.save()
-            refresh = RefreshToken.for_user(user)  # Get Token
-            userObj = User.objects.filter(id=request.data.get('id')).first()
+            return Response({'message': 'No user', 'status':400}, status=400)
+        
+        if user.is_active:
+            return Response({'message': 'Already an active user', 'status':400}, status=400)
 
-            user = UserSerializer(user)
 
-            message = render_to_string('email_template.html', {
-                'user': userObj,
-            })
-            to_email = userObj.email
-            # send_mail(mail_subject, message, 'youremail', [to_email])
-            msg = EmailMultiAlternatives(
-                'Welcome', message, 'youremail', [to_email])
-            msg.attach_alternative(message, "text/html")
-            msg.send()
-            return Response({
-                "user": user.data,
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-                'status': 201})
+        otp = OTP.objects.filter(user=user)#.reverse().first()
+        if otp.exists():
+            otp = otp.reverse().first()
+            # Check OTP Validation 
+            otp_time = datetime.strptime(str(otp.timestamp)[:19], "%Y-%m-%d %H:%M:%S")
+            current_time = datetime.strptime(str(datetime.now())[:19], "%Y-%m-%d %H:%M:%S")
+            diff = (current_time - otp_time).total_seconds() / 60
+            if diff > int(settings.OTP_TIME_OUT):
+                return Response({'message': 'OTP Expired', 'status':400}, status=400)
+
+            if str(otp.otp) == str(request.data.get('otp')):
+                user.is_active = True
+                user.save()
+
+                refresh = RefreshToken.for_user(user)  # Get Token
+                userObj = User.objects.filter(id=request.data.get('id')).first()
+
+                user = UserSerializer(user)
+                # otp = request.data['otp']
+                context = {}
+                context['otp'] = request.data['otp']
+                context['email'] = userObj
+                context['subject'] = 'Verify OTP Mail.'
+                context['otp_body'] = 'verify email otp body will be here'
+                context['otp_text'] = 'verify email otp text will be here'
+                customMail = otpMail.OTP_MAIL.sendMailTemplate(context)
+                return Response({
+                    "user": user.data,
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                    'status': 201})
+            else:
+                return Response({
+                    'message': 'Invalid OTP',
+                    'status': 404})
         else:
             return Response({
                 'message': 'Invalid OTP',
@@ -235,8 +235,7 @@ class LoginAPI(APIView):
         print(request.data)
 
         Account = User.objects.get(username=request.data['username'])
-        print(Account)
-        print('----',  Account.is_active)
+
         if not check_password(request.data['password'], Account.password):
             return Response({
                 "message": "invalid credentials",
@@ -274,7 +273,7 @@ class CartView(APIView):
             cartObj = self.serializer_class(cartObj)
             return Response(cartObj.data)
         else:
-            return Response("Null", status=404)
+            return Response([], status=404)
 
 
 # Cart Items
@@ -307,6 +306,7 @@ class CartItemListView(APIView):
     def post(self, request):
         cartObj = Cart.objects.filter(
             user=request.user.id, Isordered=False).first()
+        print(cartObj)
         productObj = Product.objects.filter(id=request.data['product']).first()
         cartItemObj = CartItem(user=request.user, cart=cartObj, price=productObj.price,
                                quantity=request.data['quantity'], product=productObj)
@@ -344,8 +344,6 @@ class CartItemDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 @receiver(pre_save, sender=CartItem)
 def my_handler(sender, **kwargs):
-    print('You Got Me ')
-
     # Get CardItem Model
     cartItemObj = kwargs['instance']
     priceofProduct = (Product.objects.get(id=cartItemObj.product.id)).price
@@ -369,10 +367,10 @@ def createCart(sender, **kwargs):
     print('User Created')
     user = kwargs['instance']
     print(user, type(user))
-    try:
-        obj = Cart.objects.get(user=user, Isordered=False).reverse().first()
-        print('Got cart')
-    except Exception as e:
+
+    obj = Cart.objects.filter(user=user, Isordered=False).reverse()
+    print('Got cart')
+    if len(obj) == 0:
         obj = Cart.objects.create(user=user)
         print('Created Cart')
 
@@ -409,17 +407,4 @@ class OrderView(APIView):
         print('Cart Created')
         return Response(orderObj.data)
 
-    # def get(self, request, *args, **kwargs):
-    #     print()
-
-    #     # Decode Token
-    #     token = request.META.get('HTTP_AUTHORIZATION')
-    #     valid_data = TokenBackend(algorithm='HS256').decode(token,verify=False)
-    #     print(valid_data)
-    #     user = valid_data['user_id']
-    #     user = User.objects.filter(id=user).first()
-    #     print("User",user)
-    #     cart = Cart.objects.filter(user=user).first()
-    #     cart = CartSerializer(cart)
-    #     return Response(cart.data)
-# AKIAXLSZRNQVJTVCMCOX fnaciq71Dad6ThxxXrIYuXgXkBCoR3rPU8cHbMlz
+    
