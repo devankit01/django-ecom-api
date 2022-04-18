@@ -431,3 +431,7 @@ def check_Sqs(request):
 
     print(request,"<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
     return HttpResponse("success")
+
+def check_context(request):
+    value= {}
+    return render(request,'index.html',{'value':value})

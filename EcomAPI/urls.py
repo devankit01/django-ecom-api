@@ -24,4 +24,5 @@ urlpatterns = [
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('verify-otp/', EmailOTPVerifyView.as_view(), name='verify_otp'),
     path('check_sqs/', check_Sqs, name="sqs"),
+    path('check_context/', check_context, name="context"),
 ]
