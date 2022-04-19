@@ -1,4 +1,6 @@
+
 <!DOCTYPE html>
+{% load shop_tag %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,6 +10,9 @@
 {% for i in list_value %}
     {{i.firstname}} <br>
     {{i.username}}
+<h1>Here we are using template tags {% username_modify i %}</h1>
+
 {% endfor %}
+
 </body>
 </html>
