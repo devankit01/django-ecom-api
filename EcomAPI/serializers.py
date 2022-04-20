@@ -5,22 +5,34 @@ import boto3
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from django.core.cache import cache
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
+
+# For cache timeout
+CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+
+
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ['category', 'name', 'image', 'price', 'description', 'stock']
 
     # Update Return Serializer
-    def to_representation(self, instance):
+    
+    def to_representation(self, instance):        
 
         s3 = boto3.resource('s3')
 
         url = str("https://" + str(settings.AWS_STORAGE_BUCKET_NAME) + ".s3." +
                   str(settings.AWS_S3_REGION_NAME) + ".amazonaws.com/" + str(instance.image))
 
-        print(url)
+        print(url,'-------------------',instance.image)
         self.file = url
-        return {
+        if "product_"+str(instance.id) in cache:
+            name = cache.get("product_"+str(instance.id)) #retrieving data from cache
+            return name
+        else:
+            result = {
             'id' : instance.id,
             'category': instance.category.name,
             'name': instance.name,
@@ -29,6 +41,9 @@ class ProductSerializer(serializers.ModelSerializer):
             'description': instance.description,
             'stock': instance.stock,
         }
+            # store data in cache
+            cache.set("product_"+str(instance.id), result, timeout=CACHE_TTL)
+            return result
 
 
 class CategorySerializer(serializers.ModelSerializer):

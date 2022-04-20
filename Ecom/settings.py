@@ -1,6 +1,6 @@
 from datetime import timedelta
 import os
-
+from decouple import config
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'EcomAPI',
     'django_filters',
+    'django_crontab',
 
 ]
 MIDDLEWARE = [
@@ -80,7 +81,15 @@ DATABASES = {
         'PASSWORD': 'HOyW_TsmgdR-U9Nyx1v4BdUCxTteKu-n',
         'HOST': 'raja.db.elephantsql.com',
         'PORT': '5432',
-    }
+    },
+    'users_db':{
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'bozwqerj',
+        'USER': 'bozwqerj',
+        'PASSWORD': '0XBkEtqz7MvlIj6wBmwLd1nSNFjHGq8W',
+        'HOST': 'batyr.db.elephantsql.com',
+        'PORT': '5432',
+    },
 }
 
 
@@ -116,7 +125,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-DEBUG = True
+DEBUG = True  # False For PRODUCTION
 
 
 STATIC_URL = '/static/'
@@ -162,13 +171,14 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'no.reply.django3@gmail.com'
-EMAIL_HOST_PASSWORD = 'Ankit@98'
 
-# in-v3.mailjet.com, 587, key : f64a2dfbd9e4eb6fcb59e8977356a715, pass : 3afb6e941bc1ae7fc5e905331221dd8c
+# Fetching email credentials from .env file
+EMAIL_USE_TLS = True
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = 587
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
@@ -176,3 +186,75 @@ SIMPLE_JWT = {
     'SIGNING_KEY': SECRET_KEY,
 
 }
+
+# Variable from env for AWS Configuration
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+REGION_NAME = config('REGION_NAME')
+BUCKET_NAME = config('BUCKET_NAME')
+# SNS SENDER ID
+SENDER_ID = config('SENDER_ID')
+
+#OTP TIME OUT
+OTP_TIME_OUT = config('OTP_TIME_OUT')
+
+
+
+
+# Logger Settings
+DEBUG_FILE = os.path.join(BASE_DIR,"Logs/app.log")
+
+LOGGING = { 
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format' : "%(asctime)s,%(levelname)s,%(module)s,%(message)s",
+            'datefmt' : "%d/%b/%Y %H:%M:%S"
+        },
+    },
+    'handlers': {
+        'per_day_file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': DEBUG_FILE,
+            'when': 'D', # this specifies the interval
+            'interval': 1, # defaults to 1, only necessary for other values 
+            'backupCount': 30, # how many backup file to keep, 30 days
+            'formatter': 'verbose',
+        }        
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['per_day_file'],
+            'level': config('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+    }
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+CACHE_TTL = 60 * 1  # 60 minutes
+# Configuration of multiple database by router
+DATABASE_ROUTERS=['routers.db_routers.AuthRouter']
+
+
+CRONJOBS = [
+    ('00 05 * * *', 'Logs.uploadLogs.logUpload'),  # for running cron everyday
+    """
+    python3 manage.py crontab add -> to add new cron job
+    python3 manage.py crontab show -> to show existing cron job
+    python3 manage.py crontab delete -> to delete cron job
+    python3 manage.py crontab run 'cron id' -> to run specific cron job
+    """
+]
