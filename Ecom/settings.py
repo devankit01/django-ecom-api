@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'EcomAPI',
     'django_filters',
+    'django_crontab',
 
 ]
 MIDDLEWARE = [
@@ -70,18 +71,18 @@ WSGI_APPLICATION = 'Ecom.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'nlgrjmua',
-        'USER': 'nlgrjmua',
-        'PASSWORD': 'HOyW_TsmgdR-U9Nyx1v4BdUCxTteKu-n',
+        'ENGINE':'django.db.backends.postgresql_psycopg2',
+        'NAME':config('NAME') ,
+        'USER':config('USER'),
+        'PASSWORD':config('PASSWORD'),
         'HOST': 'raja.db.elephantsql.com',
         'PORT': '5432',
     },
     'users_db':{
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'bozwqerj',
-        'USER': 'bozwqerj',
-        'PASSWORD': '0XBkEtqz7MvlIj6wBmwLd1nSNFjHGq8W',
+        'NAME': config('NAME_USERDB') ,
+        'USER': config('USER_USERDB'),
+        'PASSWORD': config('PASSWORD_USERDB'),
         'HOST': 'batyr.db.elephantsql.com',
         'PORT': '5432',
     },
@@ -120,7 +121,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-DEBUG = True  # For PRODUCTION
+DEBUG = True  # False For PRODUCTION
 
 
 STATIC_URL = '/static/'
@@ -135,13 +136,13 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
-AWS_S3_ENDPOINT_URL = 'https://s3.amazonaws.com'
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-AWS_S3_REGION_NAME = 'ap-south-1'
-AWS_ACCESS_KEY_ID = 'AKIAXLSZRNQVOCBWCHDU'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'serverless-django3'
-AWS_DEFAULT_ACL = None
+AWS_S3_ENDPOINT_URL =config('AWS_S3_ENDPOINT_URL')
+DEFAULT_FILE_STORAGE =config('DEFAULT_FILE_STORAGE')
+AWS_S3_REGION_NAME =config('AWS_S3_REGION_NAME')
+AWS_ACCESS_KEY_ID_S3 =config('AWS_ACCESS_KEY_ID_S3')
+AWS_SECRET_ACCESS_KEY_S3 =config('AWS_SECRET_ACCESS_KEY_S3')
+AWS_STORAGE_BUCKET_NAME =config('AWS_STORAGE_BUCKET_NAME')
+AWS_DEFAULT_ACL =config('AWS_DEFAULT_ACL')
 
 
 # JWT Include
@@ -162,7 +163,6 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
-# in-v3.mailjet.com, 587, key : f64a2dfbd9e4eb6fcb59e8977356a715, pass : 3afb6e941bc1ae7fc5e905331221dd8c
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
@@ -175,6 +175,7 @@ SIMPLE_JWT = {
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
 REGION_NAME = config('REGION_NAME')
+BUCKET_NAME = config('BUCKET_NAME')
 # SNS SENDER ID
 SENDER_ID = config('SENDER_ID')
 
@@ -211,5 +212,23 @@ LOGGING = {
     }
 }
 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+CACHE_TTL = 60 * 1  # 60 minutes
 # Configuration of multiple database by router
 DATABASE_ROUTERS=['routers.db_routers.AuthRouter']
+
+
+CRONJOBS = [
+    ('00 05 * * *', 'Logs.uploadLogs.logUpload'),  # for running cron everyday
+]

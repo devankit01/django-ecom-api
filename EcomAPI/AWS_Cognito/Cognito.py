@@ -1,13 +1,12 @@
 import boto3
+from decouple import config
 
-
-aws_access_key_id = 'AKIAXLSZRNQVD4KPYHPP'
-aws_secret_access_key = '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'
-client = boto3.client('cognito-idp', region_name='us-east-1',
+aws_access_key_id = config('AWS_ACCESS_KEY_ID_COGNITO')
+aws_secret_access_key = config('AWS_SECRET_ACCESS_KEY_COGNITO')
+client = boto3.client('cognito-idp', region_name=config('REGION_NAME'),
                       aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
-print(client)
-UserPoolId = 'us-east-1_Ym1mvMTfV'
-clientId= '1429dih4qdm2vdkekq481sk8m1'
+UserPoolId =config('USER_POOL_ID')
+clientId= config('CLIENT_ID')
 
 class AWSCognito:
     def AWS_Create_User(email, password):
@@ -55,7 +54,7 @@ class AWSCognito:
             # logger.info("SUCCESS |  AWS_SignIn Inner fn!" + str(status.HTTP_200_OK) + " "+str(response))
             return response,True
         except Exception as error:
-            print(error,'<aws cognito signIn')
+            
             error_value = str(error)
             # logger.error("FAILED |  AWS_SignIn Inner fn!" + str(status.HTTP_400_BAD_REQUEST) + " "+str(error))
             return False,error_value
@@ -65,13 +64,10 @@ class AWSCognito:
 login = AWSCognito.AWS_SignIn
 resp = login('userAWS1@yopmail.com', 'Ankit3@98')
 s = resp
-
-# print
-print(resp)
 auth= s['AuthenticationResult']['AccessToken']
 refresh = s['AuthenticationResult']['RefreshToken']
 idtoken = s['AuthenticationResult']['IdToken']
-print(auth, refresh, idtoken)
+
 
 
 # https://djangostars.com/blog/bootstrap-django-app-with-cognito/

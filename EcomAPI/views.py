@@ -33,6 +33,9 @@ from django.contrib.auth.hashers import check_password
 from datetime import datetime, timedelta
 
 from modules import awsSns, otpMail
+import logging
+
+logger = logging.getLogger('django')
 
 class CategoryList(APIView):
 
@@ -88,8 +91,7 @@ class ProductList(generics.ListCreateAPIView):
     # filter_backends = [DjangoFilterBackend]
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'description']  # Search Filter DRF
-
-    def get(self, request):
+    def get(self, request):        
         return Response(self.serializer_class(Product.objects.all(), many=True).data)
 
     def post(self, request):
@@ -111,7 +113,7 @@ class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-
+    
     def patch(self, request, pk):
         if request.user.is_superuser:
             obj = Product(pk=pk)
@@ -405,19 +407,4 @@ class OrderView(APIView):
         print('Cart Created')
         return Response(orderObj.data)
 
-    # def get(self, request, *args, **kwargs):
-    #     print()
-
-    #     # Decode Token
-    #     token = request.META.get('HTTP_AUTHORIZATION')
-    #     valid_data = TokenBackend(algorithm='HS256').decode(token,verify=False)
-    #     print(valid_data)
-    #     user = valid_data['user_id']
-    #     user = User.objects.filter(id=user).first()
-    #     print("User",user)
-    #     cart = Cart.objects.filter(user=user).first()
-    #     cart = CartSerializer(cart)
-    #     return Response(cart.data)
-# AKIAXLSZRNQVJTVCMCOX fnaciq71Dad6ThxxXrIYuXgXkBCoR3rPU8cHbMlz
-
-
+    
