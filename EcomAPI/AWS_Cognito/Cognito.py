@@ -8,13 +8,12 @@ client = boto3.client('cognito-idp', region_name=config('REGION_NAME'),
 UserPoolId =config('USER_POOL_ID')
 clientId= config('CLIENT_ID')
 
-class AWSCognito:
-    def AWS_Create_User(email, password):
+class AWSCognito: 
+    # this function is used to create user on aws cognito
+    def AWS_Create_User(email, password): # this function takes two argument email and password
         try:
-            print(email, '<aws email for Create User')
-            print(password, '<aws password for Create User')
             response = client.admin_create_user(
-                UserPoolId=UserPoolId,
+                UserPoolId=UserPoolId, 
                 Username=email,
                 UserAttributes=[
                     {
@@ -32,16 +31,13 @@ class AWSCognito:
                     # 'string': 'string'
                 }
             )
-            print(response)
-            # logger.info("SUCCESS |  AWS_Create_User Inner fn!" + str(status.HTTP_200_OK) + " "+str(response))
             return 'true'
         except Exception as error:
-            print('error is Create user -->', error)
-            # logger.error("FAILED |  AWS_Create_User Inner fn!" + str(status.HTTP_400_BAD_REQUEST) + " "+str(error))
             return error
-            
+    # this function is used for signin through aws cognito 
     def AWS_SignIn(email,password):
         try:
+            #admin_initiate_auth allow to authenticate
             response = client.admin_initiate_auth(
                 UserPoolId=UserPoolId,
                 ClientId=clientId,
@@ -51,19 +47,15 @@ class AWSCognito:
                     'PASSWORD': password
                 },
             )
-            # logger.info("SUCCESS |  AWS_SignIn Inner fn!" + str(status.HTTP_200_OK) + " "+str(response))
             return response,True
         except Exception as error:
-            
             error_value = str(error)
-            # logger.error("FAILED |  AWS_SignIn Inner fn!" + str(status.HTTP_400_BAD_REQUEST) + " "+str(error))
             return False,error_value
 
-# send = AWSCognito.AWS_Create_User
-# send('userAWS1@yopmail.com', 'Ankit3@98')
+
 login = AWSCognito.AWS_SignIn
 resp = login('userAWS1@yopmail.com', 'Ankit3@98')
-s = resp
+s = resp 
 auth= s['AuthenticationResult']['AccessToken']
 refresh = s['AuthenticationResult']['RefreshToken']
 idtoken = s['AuthenticationResult']['IdToken']
