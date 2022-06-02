@@ -1,4 +1,5 @@
 import random
+from django.shortcuts import render,HttpResponse
 import uuid
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_save
@@ -407,4 +408,29 @@ class OrderView(APIView):
         print('Cart Created')
         return Response(orderObj.data)
 
+    # def get(self, request, *args, **kwargs):
+    #     print()
+
+    #     # Decode Token
+    #     token = request.META.get('HTTP_AUTHORIZATION')
+    #     valid_data = TokenBackend(algorithm='HS256').decode(token,verify=False)
+    #     print(valid_data)
+    #     user = valid_data['user_id']
+    #     user = User.objects.filter(id=user).first()
+    #     print("User",user)
+    #     cart = Cart.objects.filter(user=user).first()
+    #     cart = CartSerializer(cart)
+    #     return Response(cart.data)
+# AKIAXLSZRNQVJTVCMCOX fnaciq71Dad6ThxxXrIYuXgXkBCoR3rPU8cHbMlz
+
+
+
+def check_Sqs(request):
+
+    print(request,"<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    return HttpResponse("success")
+
+def check_context(request):
+    value= {}
+    return render(request,'index.html',{'value':value})
     

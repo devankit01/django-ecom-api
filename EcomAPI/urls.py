@@ -5,13 +5,13 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+
 urlpatterns = [
     path('products/', ProductList.as_view()),
     path('products/<pk>/', ProductDetail.as_view()),
 
     path('category/', CategoryList.as_view()),
     path('category/<pk>/', CategoryDetail.as_view()),
-
     path('cart/', CartView.as_view()),
     path('cart-items/', CartItemListView.as_view()),
     path('cart-items/<pk>/', CartItemDetailView.as_view()),
@@ -23,5 +23,7 @@ urlpatterns = [
     path('login/', LoginAPI.as_view(), name='token_obtain_pair'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('verify-otp/', EmailOTPVerifyView.as_view(), name='verify_otp'),
+    path('check_sqs/', check_Sqs, name="sqs"),
+    path('check_context/', check_context, name="context"),
     
 ]

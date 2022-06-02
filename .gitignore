@@ -7,4 +7,10 @@ EcomAPI/migrations/__pycache__
 myenv/
 modules/__pycache__
 node_modules/
+
+
+
+# Env File
+*.env
+.env
 .vscode/
