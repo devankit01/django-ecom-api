@@ -95,3 +95,80 @@ django.contrib.auth.models.User.DoesNotExist: User matching query does not exist
 11/Apr/2022 11:44:47,INFO,autoreload,/home/appventurez/appventurez/django-modules/django-modules/Ecom/settings.py changed, reloading.
 11/Apr/2022 11:44:47,INFO,autoreload,Watching for file changes with StatReloader
 20/Apr/2022 05:37:22,INFO,autoreload,Watching for file changes with StatReloader
+02/Jun/2022 07:03:42,INFO,autoreload,Watching for file changes with StatReloader
+02/Jun/2022 07:07:02,INFO,autoreload,/home/appventurez/projects/django-modules/django-modules/Ecom/settings.py changed, reloading.
+02/Jun/2022 07:08:32,INFO,autoreload,Watching for file changes with StatReloader
+02/Jun/2022 07:09:37,INFO,autoreload,Watching for file changes with StatReloader
+02/Jun/2022 07:09:54,ERROR,log,Internal Server Error: /
+Traceback (most recent call last):
+  File "/home/appventurez/.local/lib/python3.9/site-packages/django/core/cache/__init__.py", line 50, in _create_cache
+    backend_cls = import_string(backend)
+  File "/home/appventurez/.local/lib/python3.9/site-packages/django/utils/module_loading.py", line 17, in import_string
+    module = import_module(module_path)
+  File "/usr/lib/python3.9/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1030, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1007, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 972, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 228, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1030, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1007, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 984, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'django_redis'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/appventurez/.local/lib/python3.9/site-packages/django/core/handlers/exception.py", line 34, in inner
+    response = get_response(request)
+  File "/home/appventurez/.local/lib/python3.9/site-packages/django/utils/deprecation.py", line 93, in __call__
+    response = self.process_request(request)
+  File "/home/appventurez/.local/lib/python3.9/site-packages/django/contrib/sessions/middleware.py", line 20, in process_request
+    request.session = self.SessionStore(session_key)
+  File "/home/appventurez/.local/lib/python3.9/site-packages/django/contrib/sessions/backends/cache.py", line 17, in __init__
+    self._cache = caches[settings.SESSION_CACHE_ALIAS]
+  File "/home/appventurez/.local/lib/python3.9/site-packages/django/core/cache/__init__.py", line 79, in __getitem__
+    cache = _create_cache(alias)
+  File "/home/appventurez/.local/lib/python3.9/site-packages/django/core/cache/__init__.py", line 52, in _create_cache
+    raise InvalidCacheBackendError(
+django.core.cache.backends.base.InvalidCacheBackendError: Could not find backend 'django_redis.cache.RedisCache': No module named 'django_redis'
+02/Jun/2022 07:09:54,ERROR,basehttp,"GET / HTTP/1.1" 500 113277
+02/Jun/2022 07:09:54,ERROR,log,Internal Server Error: /favicon.ico
+Traceback (most recent call last):
+  File "/home/appventurez/.local/lib/python3.9/site-packages/django/core/cache/__init__.py", line 50, in _create_cache
+    backend_cls = import_string(backend)
+  File "/home/appventurez/.local/lib/python3.9/site-packages/django/utils/module_loading.py", line 17, in import_string
+    module = import_module(module_path)
+  File "/usr/lib/python3.9/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1030, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1007, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 972, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 228, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1030, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1007, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 984, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'django_redis'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/appventurez/.local/lib/python3.9/site-packages/django/core/handlers/exception.py", line 34, in inner
+    response = get_response(request)
+  File "/home/appventurez/.local/lib/python3.9/site-packages/django/utils/deprecation.py", line 93, in __call__
+    response = self.process_request(request)
+  File "/home/appventurez/.local/lib/python3.9/site-packages/django/contrib/sessions/middleware.py", line 20, in process_request
+    request.session = self.SessionStore(session_key)
+  File "/home/appventurez/.local/lib/python3.9/site-packages/django/contrib/sessions/backends/cache.py", line 17, in __init__
+    self._cache = caches[settings.SESSION_CACHE_ALIAS]
+  File "/home/appventurez/.local/lib/python3.9/site-packages/django/core/cache/__init__.py", line 79, in __getitem__
+    cache = _create_cache(alias)
+  File "/home/appventurez/.local/lib/python3.9/site-packages/django/core/cache/__init__.py", line 52, in _create_cache
+    raise InvalidCacheBackendError(
+django.core.cache.backends.base.InvalidCacheBackendError: Could not find backend 'django_redis.cache.RedisCache': No module named 'django_redis'
+02/Jun/2022 07:09:54,ERROR,basehttp,"GET /favicon.ico HTTP/1.1" 500 113054
+02/Jun/2022 07:11:13,INFO,autoreload,Watching for file changes with StatReloader
+02/Jun/2022 07:11:22,INFO,basehttp,"GET / HTTP/1.1" 200 903
+02/Jun/2022 07:11:23,INFO,basehttp,"GET /openapi HTTP/1.1" 200 3138
+02/Jun/2022 07:11:23,WARNING,log,Not Found: /favicon.ico
+02/Jun/2022 07:11:23,WARNING,basehttp,"GET /favicon.ico HTTP/1.1" 404 2323

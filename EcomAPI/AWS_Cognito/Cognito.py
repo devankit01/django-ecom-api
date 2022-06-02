@@ -15,13 +15,19 @@ from django.conf import settings
 # aws_access_key_id = settings.AWS_ACCESS_KEY                            #'AKIAXLSZRNQVD4KPYHPP'
 # aws_secret_access_key = settings.AWS_SECRET_KEY                    #'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'
 # region_name = settings.REGION_NAME                      #'us-east-1'
-UserPoolId = 'us-east-1_rT2J0mF11'
-clientId = '127dneql84oj5mtlubcvc5hag8'
-aws_access_key_id = 'AKIAXLSZRNQVD4KPYHPP'
-aws_secret_access_key = '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'
-region_name = 'us-east-1'
-
-
+# UserPoolId = '******************'
+# clientId = '********************'
+# aws_access_key_id = '***********************'
+# aws_secret_access_key = '************************'
+# region_name = 'us-east-1'
+import boto3
+from decouple import config
+aws_access_key_id = config('AWS_ACCESS_KEY_ID_COGNITO')
+aws_secret_access_key = config('AWS_SECRET_ACCESS_KEY_COGNITO')
+client = boto3.client('cognito-idp', region_name=config('REGION_NAME'),
+                      aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
+UserPoolId =config('USER_POOL_ID')
+clientId= config('CLIENT_ID')
 class AWSCognito:
     def __init__(self):
         self.client = boto3.client('cognito-idp', region_name=region_name,
@@ -32,34 +38,9 @@ class AWSCognito:
     def AWS_Create_User(self, username, email, password):  # this Function will help us to create a new User.
         try:
             response = self.client.admin_create_user(
-                UserPoolId=self.UserPoolID,
-                Username=email,
-                UserAttributes=[
-                    {
-                        'Name': 'email',
-                        'Value': email,
-                    },
-                ],
-                ValidationData=[
-                    {
-                        'Name': 'name',
-                        'Value': username
-                    },
-                ],
-                TemporaryPassword=password,
-                ForceAliasCreation=False,
-                # MessageAction='SUPPRESS',
-                DesiredDeliveryMediums=[
-                    'EMAIL',
-                ],
-                ClientMetadata={
-                    # 'string': 'string'
-                }
-            )
+                UserPoolId=self.UserPoolID,)
             return response
         except Exception as error:
-            print('error is Create user -->', error)
-            # logger.error("FAILED |  AWS_Create_User Inner fn!" + str(status.HTTP_400_BAD_REQUEST) + " "+str(error))
             return error
 
     def AWS_SignIn(self, email, password):  # this function is return a new jwt token
@@ -73,6 +54,7 @@ class AWSCognito:
                     'PASSWORD': password
                 },
             )
+
             # logger.info("SUCCESS |  AWS_SignIn Inner fn!" + str(status.HTTP_200_OK) + " "+str(response))
             return response, True
         except Exception as error:
@@ -199,3 +181,40 @@ print(change_password,"<<<<<<<<<<<<<<<<<Here we are geting the response of the c
 
 
 # https://djangostars.com/blog/bootstrap-django-app-with-cognito/
+
+
+
+
+# **************************************************************
+
+
+# class AWSCognito: 
+#     # this function is used to create user on aws cognito
+#     def AWS_Create_User(email, password): # this function takes two argument email and password
+#         try:
+#             response = client.admin_create_user(
+#                 UserPoolId=UserPoolId, 
+#                 Username=email,
+#                 UserAttributes=[
+#                     {
+#                         'Name': 'email',
+#                         'Value': email,
+#                     },
+#                 ],
+#                 ValidationData=[
+#                     {
+#                         'Name': 'name',
+#                         'Value': username
+#                     },
+#                 ],
+#                 TemporaryPassword=password,
+#                 ForceAliasCreation=False,
+#                 # MessageAction='SUPPRESS',
+#                 DesiredDeliveryMediums=[
+#                     'EMAIL',
+#                 ],
+#                 ClientMetadata={
+#                     # 'string': 'string'
+#                 }
+#             )
+# **************************************************************

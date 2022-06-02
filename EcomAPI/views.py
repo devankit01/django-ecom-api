@@ -38,8 +38,8 @@ import logging
 
 logger = logging.getLogger('django')
 
+#Category list of the product 
 class CategoryList(APIView):
-
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
     queryset = Category.objects.all()
@@ -57,7 +57,7 @@ class CategoryList(APIView):
         else:
             return Response({'message': 'Not authorized', 'status': 401})
 
-
+#category detail of the product 
 class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
     authentication_classes = [JWTAuthentication]
@@ -83,7 +83,7 @@ class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
             return Response({'message': 'Not authorized', 'status': 401})
 
 
-# Product
+# Product list 
 class ProductList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
@@ -108,7 +108,7 @@ class ProductList(generics.ListCreateAPIView):
         else:
             return Response({'message': 'Not authorized', 'status': 401})
 
-
+# This API about the Product Detail 
 class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
@@ -133,14 +133,14 @@ class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
         else:
             return Response({'message': 'Not authorized', 'status': 401})
 
-
+#Using this API user can registered
 class RegisterView(generics.GenericAPIView):
     serializer_class = UserSerializer
 
     def post(self, request, *args,  **kwargs):
         serializer = self.get_serializer(data=request.data)
         try:
-            if serializer.is_valid():
+            if serializer.is_valid(): 
                 serializer.save()
         except Exception as error:
             return Response({'message' : 'Email Already Registered', 'status':400})
@@ -151,7 +151,7 @@ class RegisterView(generics.GenericAPIView):
             "MESSAGE" : request.data['message'],
         }
 
-        # SNS Method
+        # AWS SNS Method
         result = awsSns.AWS_SNS.sendSms(context)
         OTP.objects.create(otp=result[1],user=user) #storing OTP in db
         user = UserSerializer(user)
@@ -162,7 +162,7 @@ class RegisterView(generics.GenericAPIView):
             context['subject'] = 'Register Mail.'
             context['otp_body'] = 'Register email otp body will be here'
             context['otp_text'] = 'Register email otp text will be here'
-            customMail = otpMail.OTP_MAIL.sendMailTemplate(context)
+            customMail = otpMail.OTP_MAIL.sendMailTemplate(context) #send mail using custom template
             return Response({
                 "user": user.data,
                 'msg': 'Please verify your email address via OTP sent.',
@@ -173,12 +173,10 @@ class RegisterView(generics.GenericAPIView):
                 'msg': 'OTP not sent.',
                 'status': 400})
 
-
+#this api verify the Email Otp 
 class EmailOTPVerifyView(APIView):
-    serializer_class = EmailOTPSerializer
-
+    serializer_class = EmailOTPSerializer 
     def post(self, request):
-
         if not (request.data.get('id') and request.data.get('otp')):
             return Response({'message': 'Fill all fields', 'status':400}, status=400)
 
@@ -215,7 +213,7 @@ class EmailOTPVerifyView(APIView):
                 context['subject'] = 'Verify OTP Mail.'
                 context['otp_body'] = 'verify email otp body will be here'
                 context['otp_text'] = 'verify email otp text will be here'
-                customMail = otpMail.OTP_MAIL.sendMailTemplate(context)
+                customMail = otpMail.OTP_MAIL.sendMailTemplate(context) #send mail using custom template
                 return Response({
                     "user": user.data,
                     'refresh': str(refresh),
@@ -230,14 +228,14 @@ class EmailOTPVerifyView(APIView):
                 'message': 'Invalid OTP',
                 'status': 404})
 
-
+#This is used for login the user
 class LoginAPI(APIView):
     def post(self, request):
         print(request.data)
 
         Account = User.objects.get(username=request.data['username'])
 
-        if not check_password(request.data['password'], Account.password):
+        if not check_password(request.data['password'], Account.password): #Check password if not then wrong password
             return Response({
                 "message": "invalid credentials",
                 'status': 400})
@@ -258,8 +256,6 @@ class LoginAPI(APIView):
 
             # No backend authenticated the credentials
 # Cart APIViews
-
-
 class CartView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
@@ -277,7 +273,7 @@ class CartView(APIView):
             return Response([], status=404)
 
 
-# Cart Items
+# Cart Items Api
 class CartItemListView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
@@ -315,7 +311,7 @@ class CartItemListView(APIView):
         cartItemObj = self.serializer_class(cartItemObj)
         return Response(cartItemObj.data)
 
-
+#cartItem api view
 class CartItemDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
@@ -340,9 +336,7 @@ class CartItemDetailView(generics.RetrieveUpdateDestroyAPIView):
             return Response({'error': "Deleted Cart Failed", "status": 400})
 
 
-# Signals Implementation
-
-
+# Signals Implementation on this function
 @receiver(pre_save, sender=CartItem)
 def my_handler(sender, **kwargs):
     # Get CardItem Model
@@ -362,7 +356,6 @@ def my_handler(sender, **kwargs):
 
 
 # Create CartItem
-
 @receiver(post_save, sender=User)
 def createCart(sender, **kwargs):
     print('User Created')
@@ -377,7 +370,6 @@ def createCart(sender, **kwargs):
 
 
 # Order API
-
 class OrderView(APIView):
 
     permission_classes = [IsAuthenticated]

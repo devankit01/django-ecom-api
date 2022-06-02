@@ -75,18 +75,22 @@ WSGI_APPLICATION = 'Ecom.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'nlgrjmua',
-        'USER': 'nlgrjmua',
-        'PASSWORD': 'HOyW_TsmgdR-U9Nyx1v4BdUCxTteKu-n',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR,'db.sqlite3'),
+    },
+    'default12': {
+        'ENGINE':'django.db.backends.postgresql_psycopg2',
+        'NAME':config('NAME') ,
+        'USER':config('USER'),
+        'PASSWORD':config('PASSWORD'),
         'HOST': 'raja.db.elephantsql.com',
         'PORT': '5432',
     },
     'users_db':{
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'bozwqerj',
-        'USER': 'bozwqerj',
-        'PASSWORD': '0XBkEtqz7MvlIj6wBmwLd1nSNFjHGq8W',
+        'NAME': config('NAME_USERDB') ,
+        'USER': config('USER_USERDB'),
+        'PASSWORD': config('PASSWORD_USERDB'),
         'HOST': 'batyr.db.elephantsql.com',
         'PORT': '5432',
     },
@@ -140,25 +144,13 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
-# AWS_S3_ENDPOINT_URL = 'https://s3.amazonaws.com'
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-# AWS_S3_REGION_NAME = 'ap-south-1'
-# AWS_ACCESS_KEY_ID = 'AKIAXLSZRNQVOCBWCHDU'
-# AWS_SECRET_ACCESS_KEY = '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'
-# AWS_STORAGE_BUCKET_NAME = 'serverless-django3'
-# AWS_DEFAULT_ACL = None
-AWS_ACCESS_KEY = 'AKIAXLSZRNQVD4KPYHPP'
-AWS_SECRET_KEY = '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'
-REGION_NAME = "us-east-1"
-# AWS_ACCESS_KEY = os.getenv('AWS_ACCESS_KEY')
-# AWS_SECRET_KEY = os.getenv('AWS_SECRET_KEY')
-AWS_SQS_QUEUE_NAME = os.getenv('AWS_SQS_QUEUE_NAME')
-# REGION_NAME = os.getenv('REGION_NAME')
-UserPoolId = os.getenv('UserPoolId')
-clientId = os.getenv('clientId')
-
-
-
+AWS_S3_ENDPOINT_URL =config('AWS_S3_ENDPOINT_URL')
+DEFAULT_FILE_STORAGE =config('DEFAULT_FILE_STORAGE')
+AWS_S3_REGION_NAME =config('AWS_S3_REGION_NAME')
+AWS_ACCESS_KEY_ID_S3 =config('AWS_ACCESS_KEY_ID_S3')
+AWS_SECRET_ACCESS_KEY_S3 =config('AWS_SECRET_ACCESS_KEY_S3')
+AWS_STORAGE_BUCKET_NAME =config('AWS_STORAGE_BUCKET_NAME')
+AWS_DEFAULT_ACL =config('AWS_DEFAULT_ACL')
 
 
 # JWT Include
