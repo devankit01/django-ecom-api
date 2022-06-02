@@ -28,12 +28,13 @@ except Exception as e:
 # AWS_SECRET_KEY = settings.AWS_SECRET_KEY
 # AWS_SQS_QUEUE_NAME = settings.AWS_SQS_QUEUE_NAME
 # REGION_NAME = settings.REGION_NAME
-AWS_ACCESS_KEY = 'AKIAT2MREPZ25SSYAELO'
-AWS_SECRET_KEY = '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'
+AWS_ACCESS_KEY = '************************'
+AWS_SECRET_KEY = '********************'
 AWS_SQS_QUEUE_NAME = 'firstsqs'
 REGION_NAME = 'us-east-1'
 # queue_url = 'http://127.0.0.1:8000/api/check_sqs/'
 class SQSQueue(object):
+    # In init constructor  we initialize resource for this we need  acces key id and secret access key 
     def __init__(self, queueName=None):
         self.resource = boto3.resource('sqs', region_name=REGION_NAME,
                                        aws_access_key_id=AWS_ACCESS_KEY,
@@ -42,12 +43,12 @@ class SQSQueue(object):
                                        )
         self.queue = self.resource.get_queue_by_name(QueueName=AWS_SQS_QUEUE_NAME)
         self.QueueName = queueName
-
+# Here is the sender which which is use to send the message to sqs
     def send(self, Message={}):
         data = json.dumps(Message)
         response = self.queue.send_message(MessageBody=data)
         return response
-
+# Here is the receiver which get the message one by one from the sqs
     def receive(self):
         try:
             queue = self.resource.get_queue_by_name(QueueName=self.QueueName)

@@ -10,12 +10,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY',"Nothing we are geting from the .env file.")
-print(SECRET_KEY)
+
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*']  #Here we give the host name in which we want to allow
 
 
 # Application definition
@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
-    'EcomAPI',
+    'EcomAPI',        #Here you have to put the name of your app
     'django_filters',
     'django_crontab',
 
@@ -45,7 +45,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'EcomAPI.custom_middleware.simple_middleware'
+    'EcomAPI.custom_middleware.simple_middleware'  # Here you have to give the path of your custom middleware
 ]
 
 ROOT_URLCONF = 'Ecom.urls'
@@ -61,13 +61,13 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'EcomAPI.context_process.first_context_process'
+                'EcomAPI.context_process.first_context_process' # Here you have to give the path of your custom context processors
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'Ecom.wsgi.application'
+WSGI_APPLICATION = 'Ecom.wsgi.application' 
 
 
 # Database

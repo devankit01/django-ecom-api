@@ -1,4 +1,7 @@
 from rest_framework import status
+# these are the basic responses which we send to the frontend
+
+
 
 def out_of_process_response():
     response = {
