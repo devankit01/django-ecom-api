@@ -78,7 +78,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR,'db.sqlite3'),
     },
-    'default12': {
+    'default12': {   
         'ENGINE':'django.db.backends.postgresql_psycopg2',
         'NAME':config('NAME') ,
         'USER':config('USER'),
@@ -86,7 +86,7 @@ DATABASES = {
         'HOST': 'raja.db.elephantsql.com',
         'PORT': '5432',
     },
-    'users_db':{
+    'users_db':{  # multiple database are used for more information checked routers/db_routers.py
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': config('NAME_USERDB') ,
         'USER': config('USER_USERDB'),
@@ -205,7 +205,7 @@ LOGGING = {
             'datefmt' : "%d/%b/%Y %H:%M:%S"
         },
     },
-    'handlers': {
+    'handlers': { # this handler is used for determine each log
         'per_day_file': {
             'level': 'INFO',
             'class': 'logging.handlers.TimedRotatingFileHandler',
