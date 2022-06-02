@@ -179,6 +179,10 @@ BUCKET_NAME = config('BUCKET_NAME')
 # SNS SENDER ID
 SENDER_ID = config('SENDER_ID')
 
+#OTP TIME OUT
+OTP_TIME_OUT = config('OTP_TIME_OUT')
+
+
 
 
 # Logger Settings
@@ -231,4 +235,10 @@ DATABASE_ROUTERS=['routers.db_routers.AuthRouter']
 
 CRONJOBS = [
     ('00 05 * * *', 'Logs.uploadLogs.logUpload'),  # for running cron everyday
+    """
+    python3 manage.py crontab add -> to add new cron job
+    python3 manage.py crontab show -> to show existing cron job
+    python3 manage.py crontab delete -> to delete cron job
+    python3 manage.py crontab run 'cron id' -> to run specific cron job
+    """
 ]

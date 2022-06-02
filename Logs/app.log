@@ -91,3 +91,6 @@ django.contrib.auth.models.User.DoesNotExist: User matching query does not exist
 11/Apr/2022 07:49:18,INFO,autoreload,Watching for file changes with StatReloader
 11/Apr/2022 08:35:46,INFO,autoreload,Watching for file changes with StatReloader
 11/Apr/2022 08:39:55,INFO,autoreload,Watching for file changes with StatReloader
+11/Apr/2022 11:41:05,INFO,autoreload,Watching for file changes with StatReloader
+11/Apr/2022 11:44:47,INFO,autoreload,/home/appventurez/appventurez/django-modules/django-modules/Ecom/settings.py changed, reloading.
+11/Apr/2022 11:44:47,INFO,autoreload,Watching for file changes with StatReloader
