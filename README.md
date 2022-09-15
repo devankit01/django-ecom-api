@@ -9,3 +9,4 @@
 ### APIs Methods
 ### Elastic Search
 ### Redis
+### Serverless Deployment
