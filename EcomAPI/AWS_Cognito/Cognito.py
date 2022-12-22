@@ -1,8 +1,8 @@
 import boto3
 
 
-aws_access_key_id = 'AKIAXLSZRNQVD4KPYHPP'
-aws_secret_access_key = '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'
+aws_access_key_id = ''
+aws_secret_access_key = ''
 client = boto3.client('cognito-idp', region_name='us-east-1',
                       aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
 print(client)
