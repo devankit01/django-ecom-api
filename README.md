@@ -1,12 +1,13 @@
-# Django Modules
+# Django Integrations
 
-## This Django Module Includes various integrations :-
-### SNS & SES
-### AWS Cognito
-### Email Template
-### OTP Verification
-### Multiple Database Routes
-### APIs Methods
-### Elastic Search
-### Redis
-### Serverless Deployment
+Integrations List with AWS Services 💻 :
+
+1. SNS & SES
+2. AWS Cognito
+3. Email Template
+4. OTP Verification
+5. Multiple Database Routes
+6. APIs Methods
+7. Elastic Search
+8. Redis
+9. Serverless Deployment
